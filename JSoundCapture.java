@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -549,6 +551,10 @@ public class JSoundCapture extends JPanel implements ActionListener {
 
 			line.start( );
 			ByteArrayOutputStream out1 = out;
+			
+			List<Double> xList = new ArrayList<Double>();
+			xList.add(0.0);
+			ByteArrayOutputStream out2 = new ByteArrayOutputStream();
 
 			while ( thread != null ) {
 				if ( ( numBytesRead = line.read( data, 0, bufferLengthInBytes ) ) == -1 ) {
@@ -557,17 +563,27 @@ public class JSoundCapture extends JPanel implements ActionListener {
 				out.write( data, 0, numBytesRead );
 				out1.write( data, 0, numBytesRead );
 
-				audioInputStream1 = new AudioInputStream( new ByteArrayInputStream( out.toByteArray( ) ), 
-						format, out.toByteArray( ).length / frameSizeInBytes );
+				audioInputStream1 = new AudioInputStream( new ByteArrayInputStream( out1.toByteArray( ) ), 
+						format, out1.toByteArray( ).length / frameSizeInBytes );
 
 				long milliseconds1 = ( long ) ( ( audioInputStream1.getFrameLength( ) * 1000 ) / format.getFrameRate( ) );
 				double duration1 = milliseconds1 / 1000.0;
 
 				double x = Math.floor(duration1);
-
-				if ( x % 5 == 0 && x > 0 ) {
+				
+				byte[] audioBytes1;
+				
+				out2.write(data, 0, numBytesRead);
+				
+				if ( x % 5 == 0 && x > 1 && !xList.contains(x) ) {
+					
+					xList.add(x);
 
 					System.out.println( x );
+					
+					AudioFormat format1 = formatControls.getFormat( );
+					int frameSizeInBytes1 = format1.getFrameSize( );
+					
 					try {
 						out1.flush( );
 						out1.close( );
@@ -575,19 +591,19 @@ public class JSoundCapture extends JPanel implements ActionListener {
 						reportStatus( "Error on inputstream  " + ex.getMessage( ), MessageType.ERROR );
 					}
 
-					ByteArrayOutputStream out2 = out1;
-
-					byte[] audioBytes1 = out2.toByteArray( );
-
+					audioBytes1 = out2.toByteArray( );
+					
 					ByteArrayInputStream bais1 = new ByteArrayInputStream( audioBytes1 );
-					audioInputStream2 = new AudioInputStream( bais1, format, audioBytes1.length / frameSizeInBytes );
-//					System.out.println(audioInputStream2);
+					audioInputStream2 = new AudioInputStream( bais1, format, (audioBytes1.length / frameSizeInBytes1) );
+					System.out.println("Audio Size : " + out2.size());
 					try {
 						audioData2 = wd.extractFloatDataFromAudioInputStream( audioInputStream2 );
 						System.out.println( opr.hmmGetWordFromAmplitureArray( audioData2 ) );
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					
+					out2 = new ByteArrayOutputStream();
 				}
 
 			}
