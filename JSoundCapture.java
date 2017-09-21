@@ -555,6 +555,8 @@ public class JSoundCapture extends JPanel implements ActionListener {
 			List<Double> xList = new ArrayList<Double>();
 			xList.add(0.0);
 			ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+			Vector< Line2D.Double > lines1 = new Vector< Line2D.Double >( );
+			int lineValue = 0;
 
 			while ( thread != null ) {
 				if ( ( numBytesRead = line.read( data, 0, bufferLengthInBytes ) ) == -1 ) {
@@ -562,10 +564,46 @@ public class JSoundCapture extends JPanel implements ActionListener {
 				}
 				out.write( data, 0, numBytesRead );
 				out1.write( data, 0, numBytesRead );
+				
+				audioBytes = out.toByteArray( );
+				ByteArrayInputStream bais_ = new ByteArrayInputStream( audioBytes );
 
 				audioInputStream1 = new AudioInputStream( new ByteArrayInputStream( out1.toByteArray( ) ), 
 						format, out1.toByteArray( ).length / frameSizeInBytes );
-
+				
+				
+				
+				Dimension d = getSize( );
+				int w = d.width;
+				int h = d.height - 15;
+				
+				try {
+					audioData = wd.extractFloatDataFromAudioInputStream( audioInputStream1 );
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				int frames_per_pixel = wd.getAudioBytes( ).length / wd.getFormat( ).getFrameSize( ) / w;
+				byte my_byte = 0;
+				double y_last = 0;
+				int numChannels = wd.getFormat( ).getChannels( );
+				for ( double x = 0; x < w && audioData != null; x++ ) {
+					int idx = ( int ) ( frames_per_pixel * numChannels * x );
+					if ( wd.getFormat( ).getSampleSizeInBits( ) == 8 ) {
+						my_byte = ( byte ) audioData[ idx ];
+					} else {
+						my_byte = ( byte ) ( 128 * audioData[ idx ] / 32768 );
+					}
+					double y_new = ( double ) ( h * ( 128 - my_byte ) / 256 );
+					lines1.add( new Line2D.Double( x, y_last, x, y_new ) );
+					y_last = y_new;
+				}
+//				if ((lines1.get(lineValue).getY2() - lines1.get(lineValue).getY2()) > 10) {
+					System.out.println(">>>>>>>>>>>>>>> diffrences between lines : " + Math.abs(lines1.get(lineValue).getY2()
+							- lines1.get(lineValue).getY1()));
+//				}
+				++lineValue;
+				
+				
 				long milliseconds1 = ( long ) ( ( audioInputStream1.getFrameLength( ) * 1000 ) / format.getFrameRate( ) );
 				double duration1 = milliseconds1 / 1000.0;
 
@@ -604,6 +642,8 @@ public class JSoundCapture extends JPanel implements ActionListener {
 					}
 					
 					out2 = new ByteArrayOutputStream();
+					lines1 = new Vector< Line2D.Double >( );
+					lineValue = 0;
 				}
 
 			}
@@ -671,13 +711,15 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		 * 
 		 * @param audioBytes
 		 *            the audio bytes
+		 * 
+		 * @modified-by mert
 		 */
 		public void createWaveForm( byte[] audioBytes ) throws Exception {
 
 			lines.removeAllElements( ); // clear the old vector
 
 			Dimension d = getSize( );
-			int w = d.width;
+			int w = d.width; 
 			int h = d.height - 15;
 			audioData = null;
 			// wd.set
@@ -755,7 +797,8 @@ public class JSoundCapture extends JPanel implements ActionListener {
 					// .. render sampling graph ..
 					g2.setColor( jfcBlue );
 					for ( int i = 1; i < lines.size( ); i++ ) {
-						g2.draw( ( Line2D ) lines.get( i ) );
+						if (Math.abs(lines.get(i).getY2() - lines.get(i).getY1()) > 90) //**90
+							g2.draw( ( Line2D ) lines.get( i ) );
 					}
 
 					// .. draw current position ..
