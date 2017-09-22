@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Label;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,8 +38,10 @@ import javax.sound.sampled.TargetDataLine;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -58,6 +62,7 @@ import org.ioe.tprsa.util.MessageType;
 public class JSoundCapture extends JPanel implements ActionListener {
 
 	private static final long	serialVersionUID	= 1L;
+	private static final int 	INTERVAL 			= 2;								// sec.
 	byte[]						audioBytes			= null;
 	float[]						audioData			= null;
 	float[]						audioData2			= null;
@@ -73,6 +78,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 	SamplingGraph				samplingGraph;
 	JButton						playB, captB, pausB;
 	JButton						saveB;
+	JLabel						text;
 	String						errStr;
 	double						duration, seconds;
 	File						file;													// @jve:decl-index=0:
@@ -80,6 +86,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 	boolean						isDrawingRequired;
 	boolean						isSaveRequired;
 	JPanel						innerPanel;
+	JPanel						verifyPanel			= null;
 	String						saveFileName		= null;								// @jve:decl-index=0:
 	private Operations			opr					= new Operations( );
 
@@ -99,6 +106,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		setBorder( new EmptyBorder( 1, 1, 1, 1 ) );
 
 		innerPanel = new JPanel( );
+
 		innerPanel.setLayout( new BoxLayout( innerPanel, BoxLayout.X_AXIS ) );
 
 		JPanel buttonsPanel = new JPanel( );
@@ -109,7 +117,9 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		pausB = addButton( "Pause", buttonsPanel, false );
 		saveB = addButton( "Save ", buttonsPanel, false );
 		innerPanel.add( buttonsPanel );
-
+		
+		innerPanel.add(getStatusText());
+		
 		// samplingPanel
 		if ( isDrawingRequired ) {
 			JPanel samplingPanel = new JPanel( new BorderLayout( ) );
@@ -126,9 +136,6 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		add( completePanel );
 	}
 
-	// public void setAutoFileSaveMode(){
-	//
-	// }
 	public boolean isSoundDataAvailable( ) {
 		if ( audioBytes != null )
 			return ( audioBytes.length > 100 );
@@ -571,7 +578,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 				audioInputStream1 = new AudioInputStream( new ByteArrayInputStream( out1.toByteArray( ) ), 
 						format, out1.toByteArray( ).length / frameSizeInBytes );
 				
-				
+				//////////for detection of word breaks
 				
 				Dimension d = getSize( );
 				int w = d.width;
@@ -603,6 +610,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 //				}
 				++lineValue;
 				
+				//////////
 				
 				long milliseconds1 = ( long ) ( ( audioInputStream1.getFrameLength( ) * 1000 ) / format.getFrameRate( ) );
 				double duration1 = milliseconds1 / 1000.0;
@@ -613,7 +621,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 				
 				out2.write(data, 0, numBytesRead);
 				
-				if ( x % 5 == 0 && x > 1 && !xList.contains(x) ) {
+				if ( x % INTERVAL == 0 && x > 1 && !xList.contains(x) ) {
 					
 					xList.add(x);
 
@@ -637,6 +645,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 					try {
 						audioData2 = wd.extractFloatDataFromAudioInputStream( audioInputStream2 );
 						System.out.println( opr.hmmGetWordFromAmplitureArray( audioData2 ) );
+						getStatusText().setText( opr.hmmGetWordFromAmplitureArray( audioData2 ) );
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -864,6 +873,15 @@ public class JSoundCapture extends JPanel implements ActionListener {
 			repaint( );
 		}
 	} // End class SamplingGraph
+	
+	private JLabel getStatusText( ) {
+		if ( text == null ) {
+			text = new JLabel( "" );
+			text.setHorizontalAlignment( SwingConstants.CENTER );
+			text.setBounds( 225, 71, 189, 68 );
+		}
+		return text;
+	}
 
 	public static void main( String s[] ) {
 		// boolean isDrawingRequired, boolean isSaveRequired
