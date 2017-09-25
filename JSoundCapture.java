@@ -61,34 +61,34 @@ import org.ioe.tprsa.util.MessageType;
 
 public class JSoundCapture extends JPanel implements ActionListener {
 
-	private static final long	serialVersionUID	= 1L;
-	private static final int 	INTERVAL 			= 2;								// sec.
-	byte[]						audioBytes			= null;
-	float[]						audioData			= null;
-	float[]						audioData2			= null;
-	final int					BUFFER_SIZE			= 16384;
-	int							counter				= 0;
-	FormatControlConf			formatControls		= new FormatControlConf( );			// @jve:decl-index=0:
-	Capture						capture				= new Capture( );					// @jve:decl-index=0:
-	Playback					playback			= new Playback( );					// @jve:decl-index=0:
-	WaveData					wd;
-	AudioInputStream			audioInputStream;										// @jve:decl-index=0:
-	AudioInputStream 			audioInputStream1;
-	AudioInputStream 			audioInputStream2;
-	SamplingGraph				samplingGraph;
-	JButton						playB, captB, pausB;
-	JButton						saveB;
-	JLabel						text;
-	String						errStr;
-	double						duration, seconds;
-	File						file;													// @jve:decl-index=0:
-	Vector< Line2D.Double >		lines				= new Vector< Line2D.Double >( );	// @jve:decl-index=0:
-	boolean						isDrawingRequired;
-	boolean						isSaveRequired;
-	JPanel						innerPanel;
-	JPanel						verifyPanel			= null;
-	String						saveFileName		= null;								// @jve:decl-index=0:
-	private Operations			opr					= new Operations( );
+	private static final long 	serialVersionUID 	= 1943720871022387749L;
+	private static final int 	INTERVAL 		= 2;
+	byte[]				audioBytes		= null;
+	float[]				audioData		= null;
+	float[]				audioData2		= null;
+	final int			BUFFER_SIZE		= 16384;
+	int				counter			= 0;
+	FormatControlConf		formatControls		= new FormatControlConf( );
+	Capture				capture			= new Capture( );
+	Playback			playback		= new Playback( );
+	WaveData			wd;
+	AudioInputStream		audioInputStream;
+	AudioInputStream 		audioInputStream1;
+	AudioInputStream 		audioInputStream2;
+	SamplingGraph			samplingGraph;
+	JButton				playB, captB, pausB;
+	JButton				saveB;
+	JLabel				text;
+	String				errStr;
+	double				duration, seconds;
+	File				file;
+	Vector< Line2D.Double >		lines			= new Vector< Line2D.Double >( );
+	boolean				isDrawingRequired;
+	boolean				isSaveRequired;
+	JPanel				innerPanel;
+	JPanel				verifyPanel		= null;
+	String				saveFileName		= null;
+	private Operations		opr			= new Operations( );
 
 	/**
 	 * Instantiates a new j sound capture.
@@ -604,10 +604,12 @@ public class JSoundCapture extends JPanel implements ActionListener {
 					lines1.add( new Line2D.Double( x, y_last, x, y_new ) );
 					y_last = y_new;
 				}
-//				if ((lines1.get(lineValue).getY2() - lines1.get(lineValue).getY2()) > 10) {
-					System.out.println(">>>>>>>>>>>>>>> diffrences between lines : " + Math.abs(lines1.get(lineValue).getY2()
-							- lines1.get(lineValue).getY1()));
-//				}
+					
+					for ( int i = 1; i < lines1.size( ); i++ ) {
+//						if (lines1.get(lineValue).getY2() > 300)
+						System.out.println(lines1.get(i).getY2());
+					}
+					
 				++lineValue;
 				
 				//////////
@@ -806,7 +808,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 					// .. render sampling graph ..
 					g2.setColor( jfcBlue );
 					for ( int i = 1; i < lines.size( ); i++ ) {
-						if (Math.abs(lines.get(i).getY2() - lines.get(i).getY1()) > 90) //**90
+//						if (Math.abs(lines.get(i).getY2() - lines.get(i).getY1()) > 90) //**90
 							g2.draw( ( Line2D ) lines.get( i ) );
 					}
 
