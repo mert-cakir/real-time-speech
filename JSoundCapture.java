@@ -561,6 +561,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 			
 			List<Double> xList = new ArrayList<Double>();
 			xList.add(0.0);
+			List<Double> wList = new ArrayList<Double>(); //for word finding
 			ByteArrayOutputStream out2 = new ByteArrayOutputStream();
 			Vector< Line2D.Double > lines1 = new Vector< Line2D.Double >( );
 			int lineValue = 0;
@@ -607,7 +608,9 @@ public class JSoundCapture extends JPanel implements ActionListener {
 					
 					for ( int i = 1; i < lines1.size( ); i++ ) {
 //						if (lines1.get(lineValue).getY2() > 300)
-						System.out.println(lines1.get(i).getY2());
+//							System.out.println(lines1.get(i).getY2());
+							wList.add(lines1.get(i).getY2());
+//						}
 					}
 					
 				++lineValue;
@@ -622,6 +625,15 @@ public class JSoundCapture extends JPanel implements ActionListener {
 				byte[] audioBytes1;
 				
 				out2.write(data, 0, numBytesRead);
+				
+//				if ( !wList.isEmpty() ) {
+//					
+//					for ( int k = 0; k < wList.size(); k++ ) {
+//						
+//					}
+//					
+//					wList.clear();
+//				}
 				
 				if ( x % INTERVAL == 0 && x > 1 && !xList.contains(x) ) {
 					
