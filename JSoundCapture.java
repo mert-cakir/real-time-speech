@@ -7,8 +7,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Label;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -118,8 +116,6 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		saveB = addButton( "Save ", buttonsPanel, false );
 		innerPanel.add( buttonsPanel );
 		
-		innerPanel.add(getStatusText());
-		
 		// samplingPanel
 		if ( isDrawingRequired ) {
 			JPanel samplingPanel = new JPanel( new BorderLayout( ) );
@@ -131,8 +127,9 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		}
 		// whole panel
 		JPanel completePanel = new JPanel( );
-		completePanel.setLayout( new BoxLayout( completePanel, BoxLayout.X_AXIS ) );
+		completePanel.setLayout( new BoxLayout( completePanel, BoxLayout.Y_AXIS ) );
 		completePanel.add( innerPanel );
+		completePanel.add( getStatusText() );
 		add( completePanel );
 	}
 
@@ -890,7 +887,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 	
 	private JLabel getStatusText( ) {
 		if ( text == null ) {
-			text = new JLabel( "" );
+			text = new JLabel( "..." );
 			text.setHorizontalAlignment( SwingConstants.CENTER );
 			text.setBounds( 225, 71, 189, 68 );
 		}
@@ -900,6 +897,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 	public static void main( String s[] ) {
 		// boolean isDrawingRequired, boolean isSaveRequired
 		JSoundCapture capturePlayback = new JSoundCapture( true, true );
+		capturePlayback.setBounds(10, 10, 431, 74);
 		JFrame f = new JFrame( "Capture/Playback/Save/Read for Speaker Data" );
 		f.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		f.getContentPane( ).add( "Center", capturePlayback );
