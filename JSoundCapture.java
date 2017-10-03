@@ -59,7 +59,7 @@ import org.ioe.tprsa.util.MessageType;
 
 public class JSoundCapture extends JPanel implements ActionListener {
 
-	private static final long 	serialVersionUID 	= 1943720871022387749L;
+	private static final long 	serialVersionUID	= 1943720871022387749L;
 	private static final int 	INTERVAL 		= 2;
 	byte[]				audioBytes		= null;
 	float[]				audioData		= null;
@@ -86,6 +86,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 	JPanel				innerPanel;
 	JPanel				verifyPanel		= null;
 	String				saveFileName		= null;
+	String				fileName		= null;
 	private Operations		opr			= new Operations( );
 
 	/**
@@ -142,6 +143,14 @@ public class JSoundCapture extends JPanel implements ActionListener {
 
 	public byte[] getAudioBytes( ) {
 		return audioBytes;
+	}
+	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	public String getSaveFileName( ) {
@@ -290,7 +299,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		while ( saveFileName == null ) {
 			saveFileName = JOptionPane.showInputDialog( null, "Enter WAV File Name", "Getting File Name" );
 		}
-		wd.saveToFile( saveFileName, AudioFileFormat.Type.WAVE, audioInputStream );
+		wd.saveToFile( fileName, saveFileName, AudioFileFormat.Type.WAVE, audioInputStream );
 
 	}
 

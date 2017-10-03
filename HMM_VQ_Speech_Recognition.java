@@ -39,7 +39,7 @@ import org.ioe.tprsa.util.Utils;
  */
 public class HMM_VQ_Speech_Recognition extends JFrame {
 
-	private static final long 	serialVersionUID	= -3702690512164468272L;
+	private static final long	serialVersionUID	= -3702690512164468272L;
 	private JPanel			jContentPane		= null;
 	private JSoundCapture		soundCapture		= null;
 	private JTabbedPane		jTabbedPane		= null;
@@ -289,7 +289,9 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 
 				@Override
 				public void itemStateChanged( ItemEvent e ) {
-					soundCapture.setSaveFileName( "TrainWav" + File.separator + getWordsComboBoxAddWord( ).getSelectedItem( ) + File.separator + getWordsComboBoxAddWord( ).getSelectedItem( ) );
+					String selectedItem = (String) getWordsComboBoxAddWord().getSelectedItem();
+					soundCapture.setFileName("TrainWav" + File.separator + selectedItem);
+					soundCapture.setSaveFileName( "TrainWav" + File.separator + selectedItem + File.separator + selectedItem );
 				}
 			} );
 		}
