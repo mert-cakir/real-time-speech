@@ -39,7 +39,7 @@ import org.ioe.tprsa.util.Utils;
  */
 public class HMM_VQ_Speech_Recognition extends JFrame {
 
-	private static final long	serialVersionUID	= -3702690512164468272L;
+	private static final long 	serialVersionUID	= -3702690512164468272L;
 	private JPanel			jContentPane		= null;
 	private JSoundCapture		soundCapture		= null;
 	private JTabbedPane		jTabbedPane		= null;
@@ -93,7 +93,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JTabbedPane getJTabbedPane( ) {
 		if ( jTabbedPane == null ) {
 			jTabbedPane = new JTabbedPane( );
-			jTabbedPane.setBounds( new Rectangle( 10, 94, 485, 178 ) );
+			jTabbedPane.setBounds( new Rectangle( 10, 124, 485, 178 ) );
 			jTabbedPane.addTab( "Verify Word", null, getVerifyWordPanel( ), null );
 			jTabbedPane.addTab( "Add Sample", null, getAddSamplePanel( ), null );
 			jTabbedPane.addTab( "Run HMM Train", null, getRunTrainingPanel( ), null );
@@ -345,7 +345,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JSoundCapture getSoundCapture( ) {
 		if ( soundCapture == null ) {
 			soundCapture = new JSoundCapture( true, true );
-			soundCapture.setBounds( 10, 10, 431, 74 );
+			soundCapture.setBounds( 10, 10, 431, 104 );
 		}
 		return soundCapture;
 	}
