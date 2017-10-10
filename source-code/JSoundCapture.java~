@@ -576,7 +576,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 				if ( ( numBytesRead = line.read( data, 0, bufferLengthInBytes ) ) == -1 ) {
 					break;
 				}
-//				out.write( data, 0, numBytesRead );
+				out.write( data, 0, numBytesRead );
 				out1.write( data, 0, numBytesRead );
 				
 				audioBytes = out.toByteArray( );
