@@ -59,7 +59,7 @@ import org.ioe.tprsa.util.MessageType;
 
 public class JSoundCapture extends JPanel implements ActionListener {
 
-	private static final long 	serialVersionUID	= 1943720871022387749L;
+	private static final long 	serialVersionUID 	= 1943720871022387749L;
 	private static final int 	INTERVAL 		= 2;
 	byte[]				audioBytes		= null;
 	float[]				audioData		= null;
@@ -111,11 +111,13 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		JPanel buttonsPanel = new JPanel( );
 		buttonsPanel.setPreferredSize( new Dimension( 200, 50 ) );
 		buttonsPanel.setBorder( new EmptyBorder( 5, 0, 1, 0 ) );
+		buttonsPanel.setBackground( Color.WHITE );
 		playB = addButton( "Play", buttonsPanel, false );
 		captB = addButton( "Record", buttonsPanel, true );
 		pausB = addButton( "Pause", buttonsPanel, false );
 		saveB = addButton( "Save ", buttonsPanel, false );
 		innerPanel.add( buttonsPanel );
+		innerPanel.setBackground( Color.WHITE );
 		
 		// samplingPanel
 		if ( isDrawingRequired ) {
@@ -131,7 +133,9 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		completePanel.setLayout( new BoxLayout( completePanel, BoxLayout.Y_AXIS ) );
 		completePanel.add( innerPanel );
 		completePanel.add( getStatusText() );
+		completePanel.setBackground( Color.WHITE );
 		add( completePanel );
+		setBackground( Color.WHITE );
 	}
 
 	public boolean isSoundDataAvailable( ) {
@@ -570,7 +574,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 			List<Double> wList = new ArrayList<Double>(); //for word finding
 			ByteArrayOutputStream out2 = new ByteArrayOutputStream();
 			Vector< Line2D.Double > lines1 = new Vector< Line2D.Double >( );
-			int lineValue = 0;
+			List<String> strArr = new ArrayList<String>();
 
 			while ( thread != null ) {
 				if ( ( numBytesRead = line.read( data, 0, bufferLengthInBytes ) ) == -1 ) {
@@ -580,7 +584,6 @@ public class JSoundCapture extends JPanel implements ActionListener {
 				out1.write( data, 0, numBytesRead );
 				
 				audioBytes = out.toByteArray( );
-				ByteArrayInputStream bais_ = new ByteArrayInputStream( audioBytes );
 
 				audioInputStream1 = new AudioInputStream( new ByteArrayInputStream( out1.toByteArray( ) ), 
 						format, out1.toByteArray( ).length / frameSizeInBytes );
@@ -619,8 +622,6 @@ public class JSoundCapture extends JPanel implements ActionListener {
 //						}
 					}
 					
-				++lineValue;
-				
 				//////////
 				
 				long milliseconds1 = ( long ) ( ( audioInputStream1.getFrameLength( ) * 1000 ) / format.getFrameRate( ) );
@@ -665,14 +666,22 @@ public class JSoundCapture extends JPanel implements ActionListener {
 					try {
 						audioData2 = wd.extractFloatDataFromAudioInputStream( audioInputStream2 );
 						System.out.println( opr.hmmGetWordFromAmplitureArray( audioData2 ) );
-						getStatusText().setText( opr.hmmGetWordFromAmplitureArray( audioData2 ) );
+						if (strArr.size() < 4) {
+							strArr.add( opr.hmmGetWordFromAmplitureArray( audioData2 ) );
+						} else {
+							strArr.add( opr.hmmGetWordFromAmplitureArray( audioData2 ) );
+							strArr.remove(0);
+						}
+						StringBuilder listString = new StringBuilder();
+						for (String s : strArr)
+							listString.append(s + " ");
+							getStatusText().setText( listString.toString() );
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					
 					out2 = new ByteArrayOutputStream();
 					lines1 = new Vector< Line2D.Double >( );
-					lineValue = 0;
 				}
 
 			}
@@ -727,12 +736,12 @@ public class JSoundCapture extends JPanel implements ActionListener {
 		private Thread				thread;
 		private Font				font10				= new Font( "serif", Font.PLAIN, 10 );
 		private Font				font12				= new Font( "serif", Font.PLAIN, 12 );
-		Color						jfcBlue				= new Color( 204, 204, 255 );
-		Color						pink				= new Color( 255, 175, 175 );
+		Color						jfcBlue				= Color.BLUE ;
+		Color						pink				= Color.PINK;
 		AudioFormat					format;
 
 		public SamplingGraph( ) {
-			setBackground( new Color( 20, 20, 20 ) );
+			setBackground( Color.WHITE );
 		}
 
 		/**
@@ -789,7 +798,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 			Graphics2D g2 = ( Graphics2D ) g;
 			g2.setBackground( getBackground( ) );
 			g2.clearRect( 0, 0, w, h );
-			g2.setColor( Color.white );
+			g2.setColor( Color.BLACK );
 			g2.fillRect( 0, h - INFOPAD, w, INFOPAD );
 
 			if ( errStr != null ) {
@@ -813,12 +822,12 @@ public class JSoundCapture extends JPanel implements ActionListener {
 				}
 			} else if ( capture.thread != null ) {
 				// paint during capture
-				g2.setColor( Color.black );
+				g2.setColor( Color.WHITE );
 				g2.setFont( font12 );
 				g2.drawString( "Length: " + String.valueOf( seconds ), 3, h - 4 );
 			} else {
 				// paint during playback
-				g2.setColor( Color.black );
+				g2.setColor( Color.WHITE );
 				g2.setFont( font12 );
 				g2.drawString( "Length: " + String.valueOf( duration ) + "    Position: " + String.valueOf( seconds ), 3, h - 4 );
 
@@ -896,7 +905,7 @@ public class JSoundCapture extends JPanel implements ActionListener {
 	
 	private JLabel getStatusText( ) {
 		if ( text == null ) {
-			text = new JLabel( "..." );
+			text = new JLabel( "" );
 			text.setHorizontalAlignment( SwingConstants.CENTER );
 			text.setBounds( 225, 71, 189, 68 );
 		}
