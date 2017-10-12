@@ -1,5 +1,6 @@
 package org.ioe.tprsa.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -39,7 +40,7 @@ import org.ioe.tprsa.util.Utils;
  */
 public class HMM_VQ_Speech_Recognition extends JFrame {
 
-	private static final long	serialVersionUID	= -3702690512164468272L;
+	private static final long 	serialVersionUID	= -3702690512164468272L;
 	private JPanel			jContentPane		= null;
 	private JSoundCapture		soundCapture		= null;
 	private JTabbedPane		jTabbedPane		= null;
@@ -50,9 +51,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JButton			btnVerify		= null;
 	private JComboBox		wordsComboBoxVerify	= null;
 	private JComboBox		wordsComboBoxAddWord	= null;
-
 	private JButton			getWordButton1		= null;
-
 	private Operations		opr			= new Operations( );
 	private JLabel			aboutLBL;
 	private JLabel			statusLBLRecognize;
@@ -61,7 +60,6 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JButton			addTrainSampleBtn	= null;
 	private JLabel			lblChooseAWord;
 	private JLabel			lblAddANew;
-
 	private JButton			generateCodeBookBtn;
 	private JButton			btnNewButton_2;
 
@@ -83,6 +81,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 		this.setSize( 500, 335 );
 		this.setContentPane( getJContentPane( ) );
 		this.setTitle( "HMM/VQ Speech Recognition" );
+		this.setBackground( Color.WHITE );
 	}
 
 	/**
@@ -93,6 +92,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JTabbedPane getJTabbedPane( ) {
 		if ( jTabbedPane == null ) {
 			jTabbedPane = new JTabbedPane( );
+			jTabbedPane.setBackground( Color.WHITE );
 			jTabbedPane.setBounds( new Rectangle( 10, 124, 485, 178 ) );
 			jTabbedPane.addTab( "Verify Word", null, getVerifyWordPanel( ), null );
 			jTabbedPane.addTab( "Add Sample", null, getAddSamplePanel( ), null );
@@ -157,6 +157,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 			verifyPanel.add( getGetWordButton1( ), null );
 			verifyPanel.add( getBtnVerify( ) );
 			verifyPanel.add( getStatusLblRecognize( ) );
+			verifyPanel.setBackground( Color.WHITE );
 		}
 		return verifyPanel;
 	}
@@ -164,6 +165,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JButton getBtnVerify( ) {
 		if ( btnVerify == null ) {
 			btnVerify = new JButton( "Verify" );
+			btnVerify.setBackground( Color.WHITE );
 			btnVerify.addActionListener( new ActionListener( ) {
 
 				public void actionPerformed( ActionEvent e ) {
@@ -202,6 +204,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 			trainPanel.add( getAddWordToComboBtn( ), null );
 			trainPanel.add( getLblChooseAWord( ) );
 			trainPanel.add( getLblAddANew( ) );
+			trainPanel.setBackground( Color.WHITE );
 			// trainPanel.add(getAddTrainSampleBtn(), null);
 		}
 		return trainPanel;
@@ -219,6 +222,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 			runTrainingPanel.add( getGenerateCodeBookBtn( ) );
 			runTrainingPanel.add( getBtnNewButton_2( ) );
 		}
+		runTrainingPanel.setBackground( Color.WHITE );
 		return runTrainingPanel;
 	}
 
@@ -336,6 +340,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JPanel getJContentPane( ) {
 		if ( jContentPane == null ) {
 			jContentPane = new JPanel( );
+			jContentPane.setBackground( Color.WHITE );
 			jContentPane.setLayout( null );
 			jContentPane.add( getJTabbedPane( ) );
 			jContentPane.add( getSoundCapture( ) );
@@ -467,7 +472,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 			public void run( ) {
 				HMM_VQ_Speech_Recognition test = new HMM_VQ_Speech_Recognition( );
 				test.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-
+				test.setBackground( Color.WHITE );
 				test.setResizable( false );
 				test.setVisible( true );
 			}
@@ -477,7 +482,7 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JLabel getLblChooseAWord( ) {
 		if ( lblChooseAWord == null ) {
 			lblChooseAWord = new JLabel( "Choose a word to record sound and save to corresponding folder" );
-			lblChooseAWord.setBounds( 11, 77, 325, 14 );
+			lblChooseAWord.setBounds( 11, 77, 450, 14 );
 		}
 		return lblChooseAWord;
 	}
